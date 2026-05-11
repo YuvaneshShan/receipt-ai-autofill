@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ReceiptData = {
   merchantName: string;
@@ -23,6 +23,14 @@ export default function Home() {
   const [submittedData, setSubmittedData] = useState<ReceiptData | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const savedReceiptData = localStorage.getItem("submittedReceiptData");
+
+    if (savedReceiptData) {
+      setSubmittedData(JSON.parse(savedReceiptData));
+    }
+  }, []);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -88,7 +96,9 @@ export default function Home() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     setSubmittedData(formData);
+    localStorage.setItem("submittedReceiptData", JSON.stringify(formData));
   };
 
   return (
@@ -275,6 +285,17 @@ export default function Home() {
                 <p>{submittedData.currency || "-"}</p>
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.removeItem("submittedReceiptData");
+                setSubmittedData(null);
+              }}
+              className="mt-5 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+            >
+              Clear Saved Data
+            </button>
           </section>
         )}
       </div>
