@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Receipt-to-Form Auto-Fill Web App
 
-## Getting Started
+A simple AI-powered web app that extracts key information from a receipt image and auto-fills an editable form.
 
-First, run the development server:
+## Objective
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project was built for the AI Intern Assessment. The goal is to upload a receipt image, use a generative AI API to extract important receipt fields, and display the extracted data in a form that users can review and edit before submission.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Upload receipt image
+- Preview uploaded receipt
+- Extract receipt data using Gemini AI
+- Auto-fill editable form
+- Review and edit extracted data
+- Submit reviewed receipt data
+- Display submitted data on the page
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Fields Extracted
 
-## Learn More
+- Merchant name
+- Date
+- Total amount
+- Currency
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Gemini API
+- Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Model Used
 
-## Deploy on Vercel
+Gemini 2.5 Flash
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Prompt Used
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+You are an AI receipt extraction assistant.
+
+Extract these fields from the receipt image:
+- merchantName
+- date
+- totalAmount
+- currency
+
+Rules:
+1. Return only valid JSON.
+2. Do not include markdown.
+3. Do not include explanation.
+4. If a field is missing, use an empty string.
+5. Use this exact JSON structure:
+
+{
+  "merchantName": "",
+  "date": "",
+  "totalAmount": "",
+  "currency": ""
+}

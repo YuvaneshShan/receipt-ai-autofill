@@ -95,12 +95,24 @@ export default function Home() {
     <main className="min-h-screen bg-slate-100 px-4 py-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-950">
             Receipt-to-Form Auto-Fill Web App
           </h1>
-          <p className="mt-2 text-slate-600">
-            Upload a receipt image and use Gemini AI to auto-fill receipt details.
+          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+            Upload a receipt image, extract key details using Gemini AI, and review the editable form before submitting.
           </p>
+        </div>
+
+        <div className="mb-8 mt-5 flex flex-wrap justify-center gap-2">
+          <span className="rounded-full bg-white px-4 py-2 text-xs font-medium text-slate-700 shadow-sm">
+            AI Receipt Extraction
+          </span>
+          <span className="rounded-full bg-white px-4 py-2 text-xs font-medium text-slate-700 shadow-sm">
+            Editable Form Review
+          </span>
+          <span className="rounded-full bg-white px-4 py-2 text-xs font-medium text-slate-700 shadow-sm">
+            Local Submission
+          </span>
         </div>
 
         {errorMessage && (
@@ -231,9 +243,16 @@ export default function Home() {
 
         {submittedData && (
           <section className="mt-6 rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">
-              Submitted Receipt Data
-            </h2>
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">
+                  Submitted Receipt Data
+                </h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Final reviewed data submitted by the user.
+                </p>
+              </div>
+            </div>
 
             <div className="grid gap-3 text-sm text-slate-700 md:grid-cols-4">
               <div className="rounded-xl bg-slate-100 p-4">
