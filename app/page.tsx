@@ -10,6 +10,7 @@ type ReceiptData = {
 };
 
 export default function Home() {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<ReceiptData>({
@@ -20,25 +21,69 @@ export default function Home() {
   });
 
   const [submittedData, setSubmittedData] = useState<ReceiptData | null>(null);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
+    setSelectedImage(file);
+    setImagePreview(URL.createObjectURL(file));
+    setErrorMessage("");
+    setSubmittedData(null);
   };
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleExtractReceipt = async () => {
+    if (!selectedImage) {
+      setErrorMessage("Please upload a receipt image first.");
+      return;
+    }
+
+    try {
+      setIsExtracting(true);
+      setErrorMessage("");
+
+      const uploadData = new FormData();
+      uploadData.append("image", selectedImage);
+
+      const response = await fetch("/api/extract-receipt", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to extract receipt data.");
+      }
+
+      setFormData({
+        merchantName: data.merchantName || "",
+        date: data.date || "",
+        totalAmount: data.totalAmount || "",
+        currency: data.currency || "",
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong during extraction.";
+
+      setErrorMessage(message);
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -54,9 +99,15 @@ export default function Home() {
             Receipt-to-Form Auto-Fill Web App
           </h1>
           <p className="mt-2 text-slate-600">
-            Upload a receipt image and review the extracted details before submission.
+            Upload a receipt image and use Gemini AI to auto-fill receipt details.
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            {errorMessage}
+          </div>
+        )}
 
         <div className="grid gap-6 md:grid-cols-2">
           <section className="rounded-2xl bg-white p-6 shadow-sm">
@@ -94,14 +145,15 @@ export default function Home() {
 
             <button
               type="button"
-              disabled={!imagePreview}
-              className="mt-5 w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-400"
+              disabled={!imagePreview || isExtracting}
+              onClick={handleExtractReceipt}
+              className="mt-5 w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
-              Extract Receipt Data
+              {isExtracting ? "Extracting..." : "Extract Receipt Data"}
             </button>
 
             <p className="mt-3 text-xs text-slate-500">
-              AI extraction will be connected on Day 2.
+              The uploaded image is sent to the server API route, then processed using Gemini AI.
             </p>
           </section>
 
