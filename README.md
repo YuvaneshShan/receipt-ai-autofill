@@ -1,20 +1,22 @@
 # Receipt-to-Form Auto-Fill Web App
 
-A simple AI-powered web app that extracts key information from a receipt image and auto-fills an editable form.
+A simple AI-powered web app that extracts key information from a receipt image and auto-fills an editable form for user review.
 
 ## Objective
 
-This project was built for the AI Intern Assessment. The goal is to upload a receipt image, use a generative AI API to extract important receipt fields, and display the extracted data in a form that users can review and edit before submission.
+This project was built for the AI Intern Assessment. The objective is to allow users to upload a receipt image, use a generative AI model to extract key receipt fields, and display the extracted data in an editable form before submission.
 
 ## Features
 
 - Upload receipt image
 - Preview uploaded receipt
-- Extract receipt data using Gemini AI
-- Auto-fill editable form
-- Review and edit extracted data
+- Extract receipt details using Gemini AI
+- Auto-fill editable form fields
+- Allow user to review and edit extracted data
 - Submit reviewed receipt data
-- Display submitted data on the page
+- Save submitted data in browser localStorage
+- Display the latest submitted receipt data after refresh
+- Clear saved submitted data
 
 ## Fields Extracted
 
